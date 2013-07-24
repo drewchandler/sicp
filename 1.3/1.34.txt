@@ -1,0 +1,3 @@
+It will try to use 2 as a procedure and fail.
+
+(f f) -> (f 2) -> (2 2)
