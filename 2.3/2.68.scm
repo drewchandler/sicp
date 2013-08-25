@@ -1,0 +1,26 @@
+(define (leaf? object) (eq? (car object) 'leaf))
+(define (symbol-leaf x) (cadr x))
+(define (left-branch tree) (car tree))
+(define (right-branch tree) (cadr tree))
+(define (symbols tree)
+  (if (leaf? tree)
+      (list (symbol-leaf tree))
+      (caddr tree)))
+
+(define (encode message tree)
+  (if (null? message)
+      '()
+      (append (encode-symbol (car message) tree)
+              (encode (cdr message) tree))))
+
+(define (encode-symbol symbol tree)
+  (define (encode-iter current-node bits)
+    (cond
+      ((leaf? current-node) bits)
+      ((memq symbol (symbols (left-branch current-node)))
+       (encode-iter (left-branch current-node) (append bits (list 0))))
+      ((memq symbol (symbols (right-branch current-node)))
+       (encode-iter (right-branch current-node) (append bits (list 1))))
+      (else (error "C'mon, guy! I don't know about that symbol -- " symbol))))
+
+  (encode-iter tree '()))
