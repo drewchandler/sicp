@@ -1,0 +1,8 @@
+(magnitude '(complex (rectangular (3 4))))
+(apply-generic 'magnitude '(complex (rectangular (3 4))))
+(magnitude '(rectangular (3 4)))
+(apply-generic 'magnitude '(rectangular (3 4)))
+(sqrt (+ (square 3) (square 4)))
+
+Complex's magnitude implementation just strips off the complex tag and sends the
+contents to magnitude.
