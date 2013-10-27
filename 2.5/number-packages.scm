@@ -21,6 +21,45 @@
   ((get 'make 'scheme-number) n))
 (install-scheme-number-package)
 
+(define (install-integer-package)
+  (define (tag x)
+    (attach-tag 'integer x))    
+  (put 'add '(integer integer)
+       (lambda (x y) (tag (+ x y))))
+  (put 'sub '(integer integer)
+       (lambda (x y) (tag (- x y))))
+  (put 'mul '(integer integer)
+       (lambda (x y) (tag (* x y))))
+  (put 'div '(integer integer)
+       (lambda (x y) (tag (/ x y))))
+  (put 'make 'integer
+       (lambda (x) 
+         (if (integer? x)
+           (tag x)
+           (error "not an integer" x))))
+  'done)
+(define (make-integer n)
+  ((get 'make 'integer) n))
+(install-integer-package)
+
+(define (install-real-package)
+  (define (tag x)
+    (attach-tag 'real x))    
+  (put 'add '(real real)
+       (lambda (x y) (tag (+ x y))))
+  (put 'sub '(real real)
+       (lambda (x y) (tag (- x y))))
+  (put 'mul '(real real)
+       (lambda (x y) (tag (* x y))))
+  (put 'div '(real real)
+       (lambda (x y) (tag (/ x y))))
+  (put 'make 'real
+       (lambda (x) (tag (if (exact? x) (exact->inexact x) x))))
+  'done)
+(define (make-real n)
+  ((get 'make 'real) n))
+(install-real-package)
+
 (define (install-rational-package)
   (define (numer x) (car x))
   (define (denom x) (cdr x))
@@ -124,6 +163,7 @@
   (put 'make-from-mag-ang 'rectangular 
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
+(install-rectangular-package)
 
 (define (install-polar-package)
   (define (magnitude z) (car z))
@@ -146,3 +186,4 @@
   (put 'make-from-mag-ang 'polar 
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
+(install-polar-package)
