@@ -1,0 +1,3 @@
+We need generic operations for sin, cos, atan and sqrt. All operations in the
+complex, polar and rectangular packages need to be switched over to the generic
+versions.
