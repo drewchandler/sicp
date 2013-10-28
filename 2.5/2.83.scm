@@ -1,6 +1,7 @@
 (load "get-put.scm")
 (load "tagging.scm")
 (load "number-packages.scm")
+(load "integer-and-real-packages.scm")
 
 (define (raise number)
   (apply-generic 'raise number))

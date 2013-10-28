@@ -1,3 +1,5 @@
+(load "2.83.scm")
+
 (describe "raise"
   (it "raises an integer to a rational" (lambda ()
     (let ((rational (raise (make-integer 10))))

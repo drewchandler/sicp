@@ -2,10 +2,12 @@
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
+(define (=zero? x) (apply-generic '=zero? x))
+(define (equ? x y) (apply-generic 'equ? x y))
 
 (define (install-scheme-number-package)
   (define (tag x)
-    (attach-tag 'scheme-number x))    
+    (attach-tag 'scheme-number x))
   (put 'add '(scheme-number scheme-number)
        (lambda (x y) (tag (+ x y))))
   (put 'sub '(scheme-number scheme-number)
@@ -14,51 +16,14 @@
        (lambda (x y) (tag (* x y))))
   (put 'div '(scheme-number scheme-number)
        (lambda (x y) (tag (/ x y))))
+  (put '=zero? '(scheme-number) (lambda (x) (= x 0)))
+  (put 'equ? '(scheme-number scheme-number) (lambda (x y) (= x y)))
   (put 'make 'scheme-number
        (lambda (x) (tag x)))
   'done)
 (define (make-scheme-number n)
   ((get 'make 'scheme-number) n))
 (install-scheme-number-package)
-
-(define (install-integer-package)
-  (define (tag x)
-    (attach-tag 'integer x))    
-  (put 'add '(integer integer)
-       (lambda (x y) (tag (+ x y))))
-  (put 'sub '(integer integer)
-       (lambda (x y) (tag (- x y))))
-  (put 'mul '(integer integer)
-       (lambda (x y) (tag (* x y))))
-  (put 'div '(integer integer)
-       (lambda (x y) (tag (/ x y))))
-  (put 'make 'integer
-       (lambda (x) 
-         (if (integer? x)
-           (tag x)
-           (error "not an integer" x))))
-  'done)
-(define (make-integer n)
-  ((get 'make 'integer) n))
-(install-integer-package)
-
-(define (install-real-package)
-  (define (tag x)
-    (attach-tag 'real x))    
-  (put 'add '(real real)
-       (lambda (x y) (tag (+ x y))))
-  (put 'sub '(real real)
-       (lambda (x y) (tag (- x y))))
-  (put 'mul '(real real)
-       (lambda (x y) (tag (* x y))))
-  (put 'div '(real real)
-       (lambda (x y) (tag (/ x y))))
-  (put 'make 'real
-       (lambda (x) (tag (if (exact? x) (exact->inexact x) x))))
-  'done)
-(define (make-real n)
-  ((get 'make 'real) n))
-(install-real-package)
 
 (define (install-rational-package)
   (define (numer x) (car x))
@@ -90,6 +55,10 @@
        (lambda (x y) (tag (mul-rat x y))))
   (put 'div '(rational rational)
        (lambda (x y) (tag (div-rat x y))))
+  (put '=zero? '(rational) (lambda (x) (= (numer x) 0)))
+  (put 'equ? '(rational rational)
+       (lambda (x y) (and (= (numer x) (numer y))
+                          (= (denom x) (denom y)))))
 
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
@@ -126,6 +95,11 @@
        (lambda (z1 z2) (tag (mul-complex z1 z2))))
   (put 'div '(complex complex)
        (lambda (z1 z2) (tag (div-complex z1 z2))))
+  (put '=zero? '(complex) (lambda (x) (and (= (real-part x) 0)
+                                         (= (imag-part x) 0))))
+  (put 'equ? '(complex complex)
+       (lambda (x y) (and (= (real-part x) (real-part y))
+                          (= (imag-part x) (imag-part y)))))
   (put 'make-from-real-imag 'complex
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
@@ -151,16 +125,16 @@
              (square (imag-part z)))))
   (define (angle z)
     (atan (imag-part z) (real-part z)))
-  (define (make-from-mag-ang r a) 
+  (define (make-from-mag-ang r a)
     (cons (* r (cos a)) (* r (sin a))))
   (define (tag x) (attach-tag 'rectangular x))
   (put 'real-part '(rectangular) real-part)
   (put 'imag-part '(rectangular) imag-part)
   (put 'magnitude '(rectangular) magnitude)
   (put 'angle '(rectangular) angle)
-  (put 'make-from-real-imag 'rectangular 
+  (put 'make-from-real-imag 'rectangular
        (lambda (x y) (tag (make-from-real-imag x y))))
-  (put 'make-from-mag-ang 'rectangular 
+  (put 'make-from-mag-ang 'rectangular
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
 (install-rectangular-package)
@@ -173,7 +147,7 @@
     (* (magnitude z) (cos (angle z))))
   (define (imag-part z)
     (* (magnitude z) (sin (angle z))))
-  (define (make-from-real-imag x y) 
+  (define (make-from-real-imag x y)
     (cons (sqrt (+ (square x) (square y)))
           (atan y x)))
   (define (tag x) (attach-tag 'polar x))
@@ -183,7 +157,7 @@
   (put 'angle '(polar) angle)
   (put 'make-from-real-imag 'polar
        (lambda (x y) (tag (make-from-real-imag x y))))
-  (put 'make-from-mag-ang 'polar 
+  (put 'make-from-mag-ang 'polar
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
 (install-polar-package)
