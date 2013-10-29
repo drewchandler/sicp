@@ -13,22 +13,22 @@
         (cons term term-list)))
 
   (define (add-terms L1 L2)
-  (cond ((empty-termlist? L1) L2)
-        ((empty-termlist? L2) L1)
-        (else
-         (let ((t1 (first-term L1)) (t2 (first-term L2)))
-           (cond ((> (order t1) (order t2))
-                  (adjoin-term
-                   t1 (add-terms (rest-terms L1) L2)))
-                 ((< (order t1) (order t2))
-                  (adjoin-term
-                   t2 (add-terms L1 (rest-terms L2))))
-                 (else
-                  (adjoin-term
-                   (make-term (order t1)
-                              (add (coeff t1) (coeff t2)))
-                   (add-terms (rest-terms L1)
-                              (rest-terms L2)))))))))
+    (cond ((empty-termlist? L1) L2)
+          ((empty-termlist? L2) L1)
+          (else
+           (let ((t1 (first-term L1)) (t2 (first-term L2)))
+             (cond ((> (order t1) (order t2))
+                    (adjoin-term
+                     t1 (add-terms (rest-terms L1) L2)))
+                   ((< (order t1) (order t2))
+                    (adjoin-term
+                     t2 (add-terms L1 (rest-terms L2))))
+                   (else
+                    (adjoin-term
+                     (make-term (order t1)
+                                (add (coeff t1) (coeff t2)))
+                     (add-terms (rest-terms L1)
+                                (rest-terms L2)))))))))
 
   (define (mul-terms L1 L2)
     (if (empty-termlist? L1)
@@ -43,6 +43,17 @@
            (make-term (+ (order t1) (order t2))
                       (mul (coeff t1) (coeff t2)))
            (mul-term-by-all-terms t1 (rest-terms L))))))
+
+  (define (negate-poly p)
+    (make-poly (variable p) (negate-terms (term-list p))))
+  (define (negate-terms t)
+    (define (negate-iter remaining-terms negated-terms)
+      (if (empty-termlist? remaining-terms)
+        negated-terms
+        (adjoin-term (make-term (order (first-term remaining-terms))
+                                (negate (coeff (first-term remaining-terms))))
+                     (rest-terms remaining-terms))))
+    (negate-iter t (the-empty-termlist)))
 
   (define (the-empty-termlist) '())
   (define (first-term term-list) (car term-list))
@@ -70,6 +81,8 @@
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
        (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-poly p1 (negate-poly p2)))))
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
   (put '=zero? '(polynomial) (lambda (x)
@@ -79,6 +92,8 @@
         (and (=zero? (coeff (first-term terms)))
              (all-terms-zero? (rest-terms terms)))))
     (all-terms-zero? (term-list x))))
+  (put 'negate '(polynomial) (lambda (x)
+    (tag (negate-poly x))))
 
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
