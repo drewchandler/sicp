@@ -1,0 +1,16 @@
+(load "2.89.scm")
+
+(describe "Dense term list"
+  (it "can adjoin the 0th order term on to an empty list" (lambda ()
+    (assert (equal? (list 5) (adjoin-term (make-term 0 5) (the-empty-termlist))))
+  ))
+  (it "can adjoin the 1st order term on to an empty list" (lambda ()
+    (assert (equal? (list 5 0) (adjoin-term (make-term 1 5) (the-empty-termlist))))
+  ))
+  (it "can give the first term in the list" (lambda ()
+    (assert (equal? (make-term 4 4) (first-term (list 4 3 2 1 0))))
+  ))
+  (it "can give the remaining terms in the list" (lambda ()
+    (assert (equal? (list 3 2 1 0) (rest-terms (list 4 3 2 1 0))))
+  ))
+)

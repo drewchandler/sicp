@@ -1,0 +1,12 @@
+(define (adjoin-term term term-list)
+  (if (= (length term-list) (order term))
+    (cons (coeff term) term-list)
+    (adjoin-term term (cons 0 term-list))))
+
+(define (make-term order coeff) (list order coeff))
+(define (the-empty-termlist) '())
+(define (order term) (car term))
+(define (coeff term) (cadr term))
+(define (first-term term-list)
+  (make-term (- (length term-list) 1) (car term-list)))
+(define (rest-terms term-list) (cdr term-list))
