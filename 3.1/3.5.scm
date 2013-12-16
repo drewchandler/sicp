@@ -1,0 +1,18 @@
+(define (random-in-range low high)
+  (let ((range (- high low)))
+    (+ low (random range))))
+
+(define (estimate-integral p x1 y1 x2 y2 trials)
+  (define (iter n count)
+    (cond ((= n 0) count)
+          ((p (random-in-range x1 x2)
+              (random-in-range y1 y2))
+           (iter (- n 1) (+ count 1)))
+          (else (iter (- n 1) count))))
+  (* (/ (iter trials 0) trials)
+     (* (abs (- x1 x2)) (abs (- y1 y2)))))
+
+(define (estimate-pi trials)
+  (define (inside-unit-circle? x y)
+    (<= (+ (expt x 2) (expt y 2)) 1))
+  (estimate-integral inside-unit-circle? -1 -1 1 1 trials))
