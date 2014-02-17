@@ -1,0 +1,15 @@
+(load "ch3.scm")
+
+(define (nand-gate a1 a2 out)
+  (let ((and-out (make-wire)))
+    (and-gate a1 a2 and-out)
+    (inverter and-out out)
+    'ok))
+
+(define (or-gate a1 a2 out)
+  (let ((a1-out (make-wire))
+        (a2-out (make-wire)))
+    (nand-gate a1 a1 a1-out)
+    (nand-gate a2 a2 a2-out)
+    (nand-gate a1-out a2-out out)
+    'ok))
