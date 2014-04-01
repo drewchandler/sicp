@@ -1,0 +1,2 @@
+Louis's implementation causes deadlock. The withdraw in exchange can not run
+because serialized-exchange has already taken out the lock.

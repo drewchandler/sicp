@@ -1,0 +1,4 @@
+Only 3 possibilities exist after serializing:
+101
+121
+100

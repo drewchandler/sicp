@@ -1,0 +1,4 @@
+With the current implementations of withdraw and deposit it is safe to give
+unprotected access to the balance. However, if withdraw or deposit ever set the
+balance to an intermediate value during their work, then bad balances could find
+their way out.

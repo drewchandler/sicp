@@ -1,0 +1,5 @@
+Ben's implementation works fine.
+
+The big difference is how the difference is calculated in exchange. Because it
+reads the values and then updates them, there is a window for the read data to
+get stale.
