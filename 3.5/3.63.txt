@@ -1,0 +1,30 @@
+Louis's method results in 2 delayed computations for the same calculation. Each
+needs to be evaluated, meaning we are doing 2x the work we should be.
+
+If we didn't have memoization, the performance of the guess version would be the
+same as Louis's.
+
+With guesses:
+   ----------------------------------------
+  |                                        |
+  v
+[.|.]-> (delay (stream-map sqrt-improve guesses)) <---------------
+ |                    |                                           |
+ v                    v
+ 1                  [.|.]-> (delay (stream-map sqrt-improve (stream-cdr s)))<---
+                      |                 |                                       |
+                      v                 v                                       |
+                (sqrt-improve 1)      [.|.]-> (delay (stream-map sqrt-improve (stream-cdr s)))
+                                        |                            |
+                                        v                            v
+                          (sqrt-improve (sqrt-improve 1))           ...
+
+Without guesses:
+[.|.]-> (delay (stream-map sqrt-improve (sqrt-stream x)))
+ |         |                                 |
+ v         v                                 v
+ 1       [.|.]--------------               [.|.]-> (delay (stream-map sqrt-improve (sqrt-stream x)))
+          |                 |               |                         ^
+          |                 |               v                         |
+          v                 v               1                         |
+        (sqrt-improve 1)  (delay (stream-map sqrt-improve (stream-cdr s)))
