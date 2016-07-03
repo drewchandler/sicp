@@ -1,0 +1,9 @@
+a. The cond relies on application being last, because the application? predicate
+just checks for a pair which a lot of the expressions in our system are
+represented as. If you move it up it will think the the tag on tagged lists is
+an operator and try to apply that tag.
+
+b.
+(define (application? exp) (tagged-list? exp 'call))
+(define (operator exp) (cdar exp))
+(define (operands exp) (cddr exp))

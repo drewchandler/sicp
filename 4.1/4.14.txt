@@ -1,0 +1,3 @@
+Primitive procedures should only operate on primatives. Map takes a lambda which is not a primitive.
+
+The native map has no clue about our environments or representations of things.

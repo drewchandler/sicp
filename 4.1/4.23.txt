@@ -1,0 +1,17 @@
+1 expression:
+Eva:
+  eval the execution procedure
+Alyssa:
+  check to see if the list of expressions is null(it isn't)
+  eval the procedure
+  check to see if the list of expressions is null(it is)
+
+Eva:
+  eval the first execution procedure
+  eval the second execution procedure
+Alyssa:
+  check to see if the list of expressions is null(it isn't)
+  eval the first procedure
+  check to see if the list of expressions is null(it isn't)
+  eval the second procedure
+  check to see if the list of expressions is null(it is)

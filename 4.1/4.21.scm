@@ -1,0 +1,17 @@
+((lambda (n)
+   ((lambda (fib)
+      (fib fib n))
+    (lambda (fb k)
+      (if (or (= k 1) (= k 2))
+        1
+        (+ (fb fb (- k 2))
+           (fb fb (- k 1)))))))
+ 10)
+
+(define (f x)
+  ((lambda (even? odd?)
+     (even? even? odd? x))
+   (lambda (ev? od? n)
+     (if (= n 0) true (od? ev? od? (- n 1))))
+   (lambda (ev? od? n)
+     (if (= n 0) false (ev? ev? od? (- n 1))))))
